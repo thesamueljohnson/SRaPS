@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace PHP_SRaPS
 {
@@ -14,7 +15,7 @@ namespace PHP_SRaPS
     {
         public Business business = new Business("Default Business", "admin");
         BindingSource staffBindingSource = new BindingSource();
-        BindingSource itemsBindingSource = new BindingSource();
+        private string searchType = "Name";
 
         public MainForm()
         {
@@ -27,10 +28,17 @@ namespace PHP_SRaPS
             lsbEmployees.DataSource = staffBindingSource;
 
             //Setup sales screen
-            itemsBindingSource.DataSource = business.Items;
             RefillSales();
-            lsbSearchItems.DisplayMember = "Name";
-            lsbSearchItems.DataSource = itemsBindingSource;
+            lsbSearchItems.DisplayMember = "StockString";
+            cmbSalesperson.DisplayMember = "FullName";
+            cmbSalesperson.DataSource = staffBindingSource;
+            lsbCart.DisplayMember = "CartString";
+            rbtnName.CheckedChanged += new EventHandler(searchRadiosChanged);
+            rbtnBarcode.CheckedChanged += new EventHandler(searchRadiosChanged);
+            rbtnCategory.CheckedChanged += new EventHandler(searchRadiosChanged);
+
+            System.Drawing.Printing.PaperSize paperSize = new System.Drawing.Printing.PaperSize("Receipt", 400, 500);
+            printDocumentTransaction.DefaultPageSettings.PaperSize = paperSize;
         }
 
         //BUSINESS SCREEN ================================================
@@ -271,7 +279,6 @@ namespace PHP_SRaPS
         private void btnAddItem_Click(object sender, EventArgs e)
         {
             Item item = business.AddItem("New Unnamed Item");
-            itemsBindingSource.ResetBindings(false);
             lsbSearchItems.SelectedIndex = lsbSearchItems.Items.Count - 1;
             RefillSales();
             ItemForm itemForm = new ItemForm(this, item);
@@ -280,12 +287,70 @@ namespace PHP_SRaPS
 
         public void RefillSales()
         {
-            itemsBindingSource.ResetBindings(false);
+            staffBindingSource.ResetBindings(false);
+            RefillSearchList();
+            RefillCart();
+            RefillTransaction();
+        }
+
+        public void RefillSearchList()
+        {
+            lsbSearchItems.Items.Clear();
+
+            foreach (Item item in business.Items)
+            {
+                if (txbSearch.Text == "")
+                {
+                    lsbSearchItems.Items.Add(item);
+                }
+                else
+                {
+                    switch(searchType)
+                    {
+                        case ("Name"):
+                            if (item.Name.StartsWith(txbSearch.Text, StringComparison.CurrentCultureIgnoreCase))
+                                lsbSearchItems.Items.Add(item);
+                            break;
+                        case ("Barcode"):
+                            if (new string(item.Barcode).StartsWith(txbSearch.Text, StringComparison.CurrentCultureIgnoreCase))
+                                lsbSearchItems.Items.Add(item);
+                            break;
+                        case ("Category"):
+                            if (item.Category.StartsWith(txbSearch.Text, StringComparison.CurrentCultureIgnoreCase))
+                                lsbSearchItems.Items.Add(item);
+                            break;
+                    }
+                }
+            }
+        }
+
+        public void RefillTransaction()
+        {
+            rtxbTransaction.Text = "";
+            string details = "Thank you for shopping at " + business.Name + "! \n\n";
+
+            foreach(Item item in lsbCart.Items)
+            {
+                string str = item.Name + " (RRP: " + item.RRP.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ")\n(Base Discount: -" + item.DiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ") (Bonus Discount -" + item.BonusDiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ")\n(" + item.CartQuantity.ToString() + " X " + item.RRP.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ") Final Price: " + item.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                details += str + "\n\n";
+            }
+
+            rtxbTransaction.Text = details;
+        }
+
+        public void RefillCart()
+        {
+            if (lsbCart.Items.Count > 0 && lsbCart.SelectedIndex >= 0)
+            {
+                Item item = lsbCart.SelectedItem as Item;
+                txbCartDiscountDollar.Text = item.BonusDiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                txbCartDiscountPercentage.Text = item.BonusDiscountPercentage.ToString("P", CultureInfo.InvariantCulture);
+            }
         }
 
         private void btnEditItem_Click(object sender, EventArgs e)
         {
-            if (lsbSearchItems.Items.Count > 0)
+            if (lsbSearchItems.Items.Count > 0 && lsbSearchItems.SelectedIndex >= 0)
             {
                 ItemForm itemForm = new ItemForm(this, business.Items[lsbSearchItems.SelectedIndex]);
                 itemForm.Show();
@@ -294,9 +359,203 @@ namespace PHP_SRaPS
 
         private void btnRemoveItem_Click(object sender, EventArgs e)
         {
-            if (lsbSearchItems.Items.Count > 0) {
+            if (lsbSearchItems.Items.Count > 0 && lsbSearchItems.SelectedIndex >= 0) {
                 business.RemoveItem(lsbSearchItems.SelectedIndex);
                 RefillSales();
+            }
+        }
+
+        private void txbSearch_TextChanged(object sender, EventArgs e)
+        {
+            RefillSearchList();
+        }
+
+        private void searchRadiosChanged(object sender, EventArgs e)
+        {
+            if (rbtnName.Checked)
+                searchType = "Name";
+            if (rbtnBarcode.Checked)
+                searchType = "Barcode";
+            if (rbtnCategory.Checked)
+                searchType = "Category";
+        }
+
+        private void btnCartAdd_Click(object sender, EventArgs e)
+        {
+            if (lsbSearchItems.Items.Count > 0 && lsbSearchItems.SelectedIndex >= 0)
+            {
+                Item searchItem = lsbSearchItems.SelectedItem as Item;
+                if (searchItem.StockQuantity - searchItem.CartQuantity > 0)
+                {
+                    if (!lsbCart.Items.Contains(lsbSearchItems.SelectedItem))
+                    {
+                        //Add the selected search item to cart
+                        int index = lsbCart.Items.Add(searchItem);
+                        Item cartItem = lsbCart.Items[index] as Item;
+                        cartItem.CartQuantity = 1;
+                        cartItem.Update();
+                    }
+                    else
+                    {
+                        //Incriment the cart item quantity
+                        Item cartItem = lsbCart.Items[lsbCart.FindStringExact(searchItem.CartString)] as Item;
+                        cartItem.CartQuantity++;
+                        cartItem.Update();
+                    }
+
+                    //Update the display strings
+                    lsbSearchItems.DisplayMember = null;
+                    lsbSearchItems.DisplayMember = "StockString";
+                    lsbCart.DisplayMember = null;
+                    lsbCart.DisplayMember = "CartString";
+
+                    RefillCart();
+                    RefillTransaction();
+                }
+            }
+        }
+
+        private void btnCartRemove_Click(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0 && lsbCart.SelectedIndex >= 0)
+            {
+                Item item = lsbCart.Items[lsbCart.SelectedIndex] as Item;
+                item.CartQuantity--;
+                item.Update();
+                if(item.CartQuantity <= 0)
+                    lsbCart.Items.RemoveAt(lsbCart.SelectedIndex);
+
+                //Update the display strings
+                lsbSearchItems.DisplayMember = null;
+                lsbSearchItems.DisplayMember = "StockString";
+                lsbCart.DisplayMember = null;
+                lsbCart.DisplayMember = "CartString";
+
+                RefillTransaction();
+            }
+        }
+
+        private void lsbCart_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefillCart();
+            RefillTransaction();
+        }
+
+        private void printDocumentTransaction_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            //Load in the rich textbox data
+            int x = 10;
+            int y = 10;
+            int charPos = 0;
+
+            while(charPos < rtxbTransaction.Text.Length)
+            {
+                if(rtxbTransaction.Text[charPos] == '\n')
+                {
+                    x = 10;
+                    y += 20;
+                    charPos++;
+                }
+                else if(rtxbTransaction.Text[charPos] == '\r')
+                {
+                    charPos++;
+                } else
+                {
+                    rtxbTransaction.Select(charPos, 1);
+                    e.Graphics.DrawString(rtxbTransaction.SelectedText, rtxbTransaction.SelectionFont, new SolidBrush(rtxbTransaction.SelectionColor), new PointF(x, y));
+                    x += 8;
+                    charPos++;
+                }
+            }
+        }
+
+        private void btnPrintReceipt_Click(object sender, EventArgs e)
+        {
+            if (printDialogTransaction.ShowDialog() == DialogResult.OK)
+            {
+                if (printPreviewTransaction.ShowDialog() == DialogResult.OK)
+                    printDocumentTransaction.Print();
+            }
+        }
+
+        private void txbCartDiscountDollar_Leave(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0 && lsbCart.SelectedIndex >= 0)
+            {
+                double dollar;
+                if (txbCartDiscountDollar.Text != "" && Double.TryParse(txbCartDiscountDollar.Text, out dollar))
+                {
+                    Item item = lsbCart.SelectedItem as Item;
+                    double calc = (item.RRP - (item.RRP - dollar)) / item.RRP;
+                    item.BonusDiscountPercentage = calc;
+                    item.BonusDiscountDollar = dollar;
+                    item.Update();
+                    RefillCart();
+                    RefillTransaction();
+                }
+            }
+        }
+
+        private void txbCartDiscountPercentage_Leave(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0 && lsbCart.SelectedIndex >= 0)
+            {
+                double percentage;
+                if (txbCartDiscountPercentage.Text != "" && Double.TryParse(txbCartDiscountPercentage.Text, out percentage))
+                {
+                    Item item = lsbCart.SelectedItem as Item;
+                    double calc = item.RRP * (percentage / 100);
+                    item.BonusDiscountDollar = calc;
+                    percentage = percentage / 100; //Not sure why this is needed, but it is
+                    item.BonusDiscountPercentage = percentage;
+                    item.Update();
+                    RefillCart();
+                    RefillTransaction();
+                }
+            }
+        }
+
+        private void tbpSales_Click(object sender, EventArgs e)
+        {
+            RefillSales();
+        }
+
+        private void tbpBusiness_Click(object sender, EventArgs e)
+        {
+            RefillBusiness();
+        }
+
+        private void btnProcessSale_Click(object sender, EventArgs e)
+        {
+            if (cmbSalesperson.Items.Count > 0 && lsbCart.Items.Count > 0)
+            {
+                if (btnProcessSale.Text == "Process")
+                {
+                    btnProcessSale.Text = "Confirm";
+                }
+                else
+                {
+                    //Construct and save the sale
+                    Salesperson salesperson = cmbSalesperson.SelectedItem as Salesperson;
+                    Sale sale = new Sale(salesperson);
+                    for(var i = 0; i < lsbCart.Items.Count; i++)
+                    {
+                        Item item = lsbCart.Items[i] as Item;
+                        item.StockQuantity -= item.CartQuantity;
+
+                        Item duplicateItem = new Item(0, "");
+                        duplicateItem.Duplicate(item);
+                        duplicateItem.StockQuantity = 0;
+                        sale.Items.Add(duplicateItem);
+
+                        item.CartQuantity = 0;
+                        item.Update();
+                    }
+
+                    lsbCart.Items.Clear();
+                    btnProcessSale.Text = "Process";
+                    RefillSales();
+                }
             }
         }
     }
