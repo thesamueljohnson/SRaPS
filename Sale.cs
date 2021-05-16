@@ -9,8 +9,10 @@ public class Sale
 	private double _total;
 	private Salesperson _salesperson;
 	private string _notes;
-	private double _discountDollar;
-	private double _discountPercentage;
+	private double _discount;
+
+	public double Total { get { return Total; } set { _total = value; } }
+	public double Discount { get { return Total; } set { _discount = value; } }
 
 	public List<Item> Items { get { return _items; } set { _items = value; } }
 

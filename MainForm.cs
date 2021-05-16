@@ -15,6 +15,7 @@ namespace PHP_SRaPS
     {
         public Business business = new Business("Default Business", "admin");
         BindingSource staffBindingSource = new BindingSource();
+        BindingSource staffDayBindingSource = new BindingSource();
         private string searchType = "Name";
 
         public MainForm()
@@ -30,12 +31,21 @@ namespace PHP_SRaPS
             //Setup sales screen
             RefillSales();
             lsbSearchItems.DisplayMember = "StockString";
-            cmbSalesperson.DisplayMember = "FullName";
-            cmbSalesperson.DataSource = staffBindingSource;
+            //Moved salesperson combo box to day start in clock button
             lsbCart.DisplayMember = "CartString";
             rbtnName.CheckedChanged += new EventHandler(searchRadiosChanged);
             rbtnBarcode.CheckedChanged += new EventHandler(searchRadiosChanged);
             rbtnCategory.CheckedChanged += new EventHandler(searchRadiosChanged);
+            btnCartAdd.Click += new EventHandler(lsbCart_SizeChanged);
+            btnCartRemove.Click += new EventHandler(lsbCart_SizeChanged);
+            btnProcessSale.Click += new EventHandler(lsbCart_SizeChanged);
+            btnAddItem.Click += new EventHandler(lsbSearchItems_SelectedIndexChanged);
+            btnRemoveItem.Click += new EventHandler(lsbSearchItems_SelectedIndexChanged);
+            btnCartAdd.Enabled = false;
+            txbCartDiscountPercentage.Text = 0.ToString("P", CultureInfo.InvariantCulture);
+            txbCartDiscountDollar.Text = 0.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+            txbTotalDiscountPercentage.Text = 0.ToString("P", CultureInfo.InvariantCulture);
+            txbTotalDiscountDollar.Text = 0.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             System.Drawing.Printing.PaperSize paperSize = new System.Drawing.Printing.PaperSize("Receipt", 400, 500);
             printDocumentTransaction.DefaultPageSettings.PaperSize = paperSize;
@@ -226,7 +236,10 @@ namespace PHP_SRaPS
                 business.ChangePassword(txbBusinessPassword.Text);
             ///Saving change in employee data
             if (sender == btnEmployeeEdit)
+            {
                 business.UpdateStaff(lsbEmployees.SelectedIndex, txbFirstName.Text, txbLastName.Text);
+                RefillSales();
+            }
             ///Saving change in employee data
             if (sender == btnEmployeePasswordEdit && lsbEmployees.Items.Count > 0)
                 business.Staff[lsbEmployees.SelectedIndex].ChangePassword(txbEmployeePassword.Text);
@@ -238,13 +251,28 @@ namespace PHP_SRaPS
                 {
                     btnClock.Text = "CLOCK OUT";
                     target.DayStart = DateTime.Now;
+                    //Start a new business day if they're the first to clock in on a new day
+                    if (business.CurrentBusinessDay == null)
+                    {
+                        business.StartBusinessDay();
+                        staffDayBindingSource.DataSource = business.CurrentBusinessDay.ClockedOn;
+                        cmbSalesperson.DisplayMember = "FullName";
+                        cmbSalesperson.DataSource = staffDayBindingSource;
+                    }
+                    business.CurrentBusinessDay.AddStaff(target);
                 }
                 else
                 {
                     btnClock.Text = "CLOCK IN";
                     target.DayEnd = DateTime.Now;
                     target.AddDayHours();
+                    business.CurrentBusinessDay.ClockOut(target);
+                    //End business day if they're the last to clock out
+                    if (business.CurrentBusinessDay != null && business.IsLastClockedIn(target))
+                        business.EndBusinessDay();
                 }
+
+                RefillSales();
             }
             if(sender == btnRemoveEmployee)
                 business.Staff.Remove(business.Staff[lsbEmployees.SelectedIndex]);
@@ -287,7 +315,7 @@ namespace PHP_SRaPS
 
         public void RefillSales()
         {
-            staffBindingSource.ResetBindings(false);
+            staffDayBindingSource.ResetBindings(false);
             RefillSearchList();
             RefillCart();
             RefillTransaction();
@@ -327,13 +355,24 @@ namespace PHP_SRaPS
         public void RefillTransaction()
         {
             rtxbTransaction.Text = "";
-            string details = "Thank you for shopping at " + business.Name + "! \n\n";
+            string salespersonString = "SELECT A CLOCKED-IN SALESPERSON!!!";
+            if (cmbSalesperson.Text != "")
+                salespersonString = "You were served by " + cmbSalesperson.Text + ".";
+            string details = "Thank you for shopping at " + business.Name + "!\n" + salespersonString + "\n\n";
+            double total = 0;
 
             foreach(Item item in lsbCart.Items)
             {
+                total += item.Price;
                 string str = item.Name + " (RRP: " + item.RRP.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ")\n(Base Discount: -" + item.DiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ") (Bonus Discount -" + item.BonusDiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ")\n(" + item.CartQuantity.ToString() + " X " + item.RRP.ToString("C", CultureInfo.CreateSpecificCulture("en-US")) + ") Final Price: " + item.Price.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
                 details += str + "\n\n";
             }
+            if (txbTotalDiscountDollar.Text != "" && txbTotalDiscountDollar.Text != "$0.00")
+            {
+                details += "Final Discount: -" + txbTotalDiscountDollar.Text + "\n\n";
+                total -= Double.Parse(txbTotalDiscountDollar.Text, NumberStyles.Currency);
+            }
+            details += "Total Amount: " + total.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
 
             rtxbTransaction.Text = details;
         }
@@ -538,10 +577,13 @@ namespace PHP_SRaPS
                     //Construct and save the sale
                     Salesperson salesperson = cmbSalesperson.SelectedItem as Salesperson;
                     Sale sale = new Sale(salesperson);
+                    double totalPrice = 0;
+
                     for(var i = 0; i < lsbCart.Items.Count; i++)
                     {
                         Item item = lsbCart.Items[i] as Item;
                         item.StockQuantity -= item.CartQuantity;
+                        totalPrice += item.Price;
 
                         Item duplicateItem = new Item(0, "");
                         duplicateItem.Duplicate(item);
@@ -552,10 +594,118 @@ namespace PHP_SRaPS
                         item.Update();
                     }
 
+                    //Add sale to business day
+                    if (txbTotalDiscountDollar.Text != "" && txbTotalDiscountDollar.Text != "$0.00")
+                    {
+                        double discount = Double.Parse(txbTotalDiscountDollar.Text, NumberStyles.Currency);
+                        sale.Discount = discount;
+                        totalPrice -= discount;
+                    }
+                    sale.Total = totalPrice;
+                    business.CurrentBusinessDay.AddSale(sale);
+
                     lsbCart.Items.Clear();
+                    txbTotalDiscountPercentage.Text = 0.ToString("P", CultureInfo.InvariantCulture);
+                    txbTotalDiscountDollar.Text = 0.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
                     btnProcessSale.Text = "Process";
                     RefillSales();
                 }
+            }
+        }
+
+        private void txbTotalDiscountDollar_Leave(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0)
+            {
+                double dollar;
+                if (txbTotalDiscountDollar.Text != "" && Double.TryParse(txbTotalDiscountDollar.Text, out dollar))
+                {
+                    double total = 0;
+                    for(var i = 0; i < lsbCart.Items.Count; i++)
+                    {
+                        Item item = lsbCart.Items[i] as Item;
+                        total += item.Price;
+                    }
+                    double calc = (total - (total - dollar)) / total;
+                    txbTotalDiscountPercentage.Text = calc.ToString("P", CultureInfo.InvariantCulture);
+                    txbTotalDiscountDollar.Text = dollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                    RefillTransaction();
+                }
+            }
+        }
+
+        private void txbTotalDiscountPercentage_Leave(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0)
+            {
+                double percentage;
+                if (txbTotalDiscountPercentage.Text != "" && Double.TryParse(txbTotalDiscountPercentage.Text, out percentage))
+                {
+                    double total = 0;
+                    for (var i = 0; i < lsbCart.Items.Count; i++)
+                    {
+                        Item item = lsbCart.Items[i] as Item;
+                        total += item.Price;
+                    }
+                    double calc = total * (percentage / 100);
+                    txbTotalDiscountDollar.Text = calc.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
+                    percentage = percentage / 100;
+                    txbTotalDiscountPercentage.Text = percentage.ToString("P", CultureInfo.InvariantCulture);
+                    RefillTransaction();
+                }
+            }
+        }
+
+        private void lsbSearchItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lsbSearchItems.Items.Count > 0 && lsbSearchItems.SelectedIndex >= 0)
+            {
+                btnCartAdd.Enabled = true;
+            } else
+            {
+                btnCartAdd.Enabled = false;
+            }
+        }
+
+        private void lsbCart_SizeChanged(object sender, EventArgs e)
+        {
+            if (lsbCart.Items.Count > 0 && cmbSalesperson.Text != "")
+            {
+                txbCartDiscountDollar.ReadOnly = false;
+                txbCartDiscountPercentage.ReadOnly = false;
+                btnCartRemove.Enabled = true;
+                txbTotalDiscountDollar.ReadOnly = false;
+                txbTotalDiscountPercentage.ReadOnly = false;
+                if (cmbSalesperson.Text != "")
+                {
+                    btnPrintReceipt.Enabled = true;
+                    btnProcessSale.Enabled = true;
+                }
+
+            } else
+            {
+                txbCartDiscountDollar.ReadOnly = true;
+                txbCartDiscountPercentage.ReadOnly = true;
+                if(lsbCart.Items.Count <= 0)
+                    btnCartRemove.Enabled = false;
+                txbTotalDiscountDollar.ReadOnly = true;
+                txbTotalDiscountPercentage.ReadOnly = true;
+                btnPrintReceipt.Enabled = false;
+                btnProcessSale.Enabled = false;
+            }
+        }
+
+        private void cmbSalesperson_TextUpdate(object sender, EventArgs e)
+        {
+            //Enable the process buttons if salesperson becomes correct
+            if(lsbCart.Items.Count > 0 && cmbSalesperson.Text != "")
+            {
+                btnPrintReceipt.Enabled = true;
+                btnProcessSale.Enabled = true;
+            } else
+            {
+                btnPrintReceipt.Enabled = false;
+                btnProcessSale.Enabled = false;
             }
         }
     }

@@ -63,11 +63,13 @@ namespace PHP_SRaPS
             this.btnBusinessNameEdit = new System.Windows.Forms.Button();
             this.txbBusinessName = new System.Windows.Forms.TextBox();
             this.tbpSales = new System.Windows.Forms.TabPage();
+            this.lblSalesperson = new System.Windows.Forms.Label();
+            this.cmbSalesperson = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lblCart = new System.Windows.Forms.Label();
             this.lsbSearchItems = new System.Windows.Forms.ListBox();
             this.btnEditItem = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblSearchBy = new System.Windows.Forms.Label();
             this.btnRemoveItem = new System.Windows.Forms.Button();
             this.btnAddItem = new System.Windows.Forms.Button();
             this.pnlSearchBy = new System.Windows.Forms.Panel();
@@ -82,20 +84,18 @@ namespace PHP_SRaPS
             this.lblCartDiscountDollar = new System.Windows.Forms.Label();
             this.txbCartDiscountDollar = new System.Windows.Forms.TextBox();
             this.btnCartAdd = new System.Windows.Forms.Button();
+            this.btnProcessSale = new System.Windows.Forms.Button();
             this.btnPrintReceipt = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.rtxbTransaction = new System.Windows.Forms.RichTextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txbTotalDiscountPercentage = new System.Windows.Forms.TextBox();
+            this.txbTotalDiscountDollar = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txbSearch = new System.Windows.Forms.TextBox();
             this.tbpReporting = new System.Windows.Forms.TabPage();
             this.printDialogTransaction = new System.Windows.Forms.PrintDialog();
             this.printDocumentTransaction = new System.Drawing.Printing.PrintDocument();
             this.printPreviewTransaction = new System.Windows.Forms.PrintPreviewDialog();
-            this.cmbSalesperson = new System.Windows.Forms.ComboBox();
-            this.lblSalesperson = new System.Windows.Forms.Label();
-            this.btnProcessSale = new System.Windows.Forms.Button();
             this.tbcMain.SuspendLayout();
             this.tbpBusiness.SuspendLayout();
             this.tbpSales.SuspendLayout();
@@ -124,7 +124,7 @@ namespace PHP_SRaPS
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(56, 14);
             this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "V_1.0.4";
+            this.lblVersion.Text = "V_1.0.5";
             // 
             // tbcMain
             // 
@@ -443,7 +443,7 @@ namespace PHP_SRaPS
             this.tbpSales.Controls.Add(this.lblCart);
             this.tbpSales.Controls.Add(this.lsbSearchItems);
             this.tbpSales.Controls.Add(this.btnEditItem);
-            this.tbpSales.Controls.Add(this.label1);
+            this.tbpSales.Controls.Add(this.lblSearchBy);
             this.tbpSales.Controls.Add(this.btnRemoveItem);
             this.tbpSales.Controls.Add(this.btnAddItem);
             this.tbpSales.Controls.Add(this.pnlSearchBy);
@@ -457,6 +457,25 @@ namespace PHP_SRaPS
             this.tbpSales.Text = "Sales";
             this.tbpSales.UseVisualStyleBackColor = true;
             this.tbpSales.Click += new System.EventHandler(this.tbpSales_Click);
+            // 
+            // lblSalesperson
+            // 
+            this.lblSalesperson.AutoSize = true;
+            this.lblSalesperson.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSalesperson.Location = new System.Drawing.Point(251, 11);
+            this.lblSalesperson.Name = "lblSalesperson";
+            this.lblSalesperson.Size = new System.Drawing.Size(59, 12);
+            this.lblSalesperson.TabIndex = 14;
+            this.lblSalesperson.Text = "Salesperson:";
+            // 
+            // cmbSalesperson
+            // 
+            this.cmbSalesperson.FormattingEnabled = true;
+            this.cmbSalesperson.Location = new System.Drawing.Point(316, 8);
+            this.cmbSalesperson.Name = "cmbSalesperson";
+            this.cmbSalesperson.Size = new System.Drawing.Size(173, 21);
+            this.cmbSalesperson.TabIndex = 13;
+            this.cmbSalesperson.TextUpdate += new System.EventHandler(this.cmbSalesperson_TextUpdate);
             // 
             // label2
             // 
@@ -485,6 +504,7 @@ namespace PHP_SRaPS
             this.lsbSearchItems.Name = "lsbSearchItems";
             this.lsbSearchItems.Size = new System.Drawing.Size(181, 199);
             this.lsbSearchItems.TabIndex = 12;
+            this.lsbSearchItems.SelectedIndexChanged += new System.EventHandler(this.lsbSearchItems_SelectedIndexChanged);
             // 
             // btnEditItem
             // 
@@ -496,15 +516,15 @@ namespace PHP_SRaPS
             this.btnEditItem.UseVisualStyleBackColor = true;
             this.btnEditItem.Click += new System.EventHandler(this.btnEditItem_Click);
             // 
-            // label1
+            // lblSearchBy
             // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(140, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 12);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Search by:";
+            this.lblSearchBy.AutoSize = true;
+            this.lblSearchBy.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSearchBy.Location = new System.Drawing.Point(140, 11);
+            this.lblSearchBy.Name = "lblSearchBy";
+            this.lblSearchBy.Size = new System.Drawing.Size(49, 12);
+            this.lblSearchBy.TabIndex = 5;
+            this.lblSearchBy.Text = "Search by:";
             // 
             // btnRemoveItem
             // 
@@ -520,7 +540,7 @@ namespace PHP_SRaPS
             // 
             this.btnAddItem.Location = new System.Drawing.Point(132, 283);
             this.btnAddItem.Name = "btnAddItem";
-            this.btnAddItem.Size = new System.Drawing.Size(57, 20);
+            this.btnAddItem.Size = new System.Drawing.Size(58, 20);
             this.btnAddItem.TabIndex = 9;
             this.btnAddItem.Text = "New";
             this.btnAddItem.UseVisualStyleBackColor = true;
@@ -593,8 +613,8 @@ namespace PHP_SRaPS
             this.splcTransaction.Panel2.Controls.Add(this.btnPrintReceipt);
             this.splcTransaction.Panel2.Controls.Add(this.label3);
             this.splcTransaction.Panel2.Controls.Add(this.rtxbTransaction);
-            this.splcTransaction.Panel2.Controls.Add(this.textBox1);
-            this.splcTransaction.Panel2.Controls.Add(this.textBox2);
+            this.splcTransaction.Panel2.Controls.Add(this.txbTotalDiscountPercentage);
+            this.splcTransaction.Panel2.Controls.Add(this.txbTotalDiscountDollar);
             this.splcTransaction.Panel2.Controls.Add(this.label4);
             this.splcTransaction.Size = new System.Drawing.Size(286, 268);
             this.splcTransaction.SplitterDistance = 130;
@@ -619,6 +639,7 @@ namespace PHP_SRaPS
             this.lsbCart.Size = new System.Drawing.Size(213, 121);
             this.lsbCart.TabIndex = 6;
             this.lsbCart.SelectedIndexChanged += new System.EventHandler(this.lsbCart_SelectedIndexChanged);
+            this.lsbCart.SizeChanged += new System.EventHandler(this.lsbCart_SizeChanged);
             // 
             // lblCartDiscountPercentage
             // 
@@ -666,6 +687,16 @@ namespace PHP_SRaPS
             this.btnCartAdd.UseVisualStyleBackColor = true;
             this.btnCartAdd.Click += new System.EventHandler(this.btnCartAdd_Click);
             // 
+            // btnProcessSale
+            // 
+            this.btnProcessSale.Location = new System.Drawing.Point(213, 112);
+            this.btnProcessSale.Name = "btnProcessSale";
+            this.btnProcessSale.Size = new System.Drawing.Size(69, 20);
+            this.btnProcessSale.TabIndex = 14;
+            this.btnProcessSale.Text = "Process";
+            this.btnProcessSale.UseVisualStyleBackColor = true;
+            this.btnProcessSale.Click += new System.EventHandler(this.btnProcessSale_Click);
+            // 
             // btnPrintReceipt
             // 
             this.btnPrintReceipt.Location = new System.Drawing.Point(134, 112);
@@ -697,19 +728,21 @@ namespace PHP_SRaPS
             this.rtxbTransaction.Text = "";
             this.rtxbTransaction.WordWrap = false;
             // 
-            // textBox1
+            // txbTotalDiscountPercentage
             // 
-            this.textBox1.Location = new System.Drawing.Point(69, 112);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(59, 20);
-            this.textBox1.TabIndex = 10;
+            this.txbTotalDiscountPercentage.Location = new System.Drawing.Point(69, 112);
+            this.txbTotalDiscountPercentage.Name = "txbTotalDiscountPercentage";
+            this.txbTotalDiscountPercentage.Size = new System.Drawing.Size(59, 20);
+            this.txbTotalDiscountPercentage.TabIndex = 10;
+            this.txbTotalDiscountPercentage.Leave += new System.EventHandler(this.txbTotalDiscountPercentage_Leave);
             // 
-            // textBox2
+            // txbTotalDiscountDollar
             // 
-            this.textBox2.Location = new System.Drawing.Point(4, 112);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(59, 20);
-            this.textBox2.TabIndex = 8;
+            this.txbTotalDiscountDollar.Location = new System.Drawing.Point(4, 112);
+            this.txbTotalDiscountDollar.Name = "txbTotalDiscountDollar";
+            this.txbTotalDiscountDollar.Size = new System.Drawing.Size(59, 20);
+            this.txbTotalDiscountDollar.TabIndex = 8;
+            this.txbTotalDiscountDollar.Leave += new System.EventHandler(this.txbTotalDiscountDollar_Leave);
             // 
             // label4
             // 
@@ -761,34 +794,6 @@ namespace PHP_SRaPS
             this.printPreviewTransaction.Name = "printPreviewTransaction";
             this.printPreviewTransaction.Visible = false;
             // 
-            // cmbSalesperson
-            // 
-            this.cmbSalesperson.FormattingEnabled = true;
-            this.cmbSalesperson.Location = new System.Drawing.Point(316, 8);
-            this.cmbSalesperson.Name = "cmbSalesperson";
-            this.cmbSalesperson.Size = new System.Drawing.Size(173, 21);
-            this.cmbSalesperson.TabIndex = 13;
-            // 
-            // lblSalesperson
-            // 
-            this.lblSalesperson.AutoSize = true;
-            this.lblSalesperson.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSalesperson.Location = new System.Drawing.Point(251, 11);
-            this.lblSalesperson.Name = "lblSalesperson";
-            this.lblSalesperson.Size = new System.Drawing.Size(59, 12);
-            this.lblSalesperson.TabIndex = 14;
-            this.lblSalesperson.Text = "Salesperson:";
-            // 
-            // btnProcessSale
-            // 
-            this.btnProcessSale.Location = new System.Drawing.Point(213, 112);
-            this.btnProcessSale.Name = "btnProcessSale";
-            this.btnProcessSale.Size = new System.Drawing.Size(69, 20);
-            this.btnProcessSale.TabIndex = 14;
-            this.btnProcessSale.Text = "Process";
-            this.btnProcessSale.UseVisualStyleBackColor = true;
-            this.btnProcessSale.Click += new System.EventHandler(this.btnProcessSale_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -799,7 +804,7 @@ namespace PHP_SRaPS
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblTitle);
             this.Name = "MainForm";
-            this.Text = "SRaPS V_1.0.4 (Prototype)";
+            this.Text = "SRaPS V_1.0.5 (Prototype)";
             this.tbcMain.ResumeLayout(false);
             this.tbpBusiness.ResumeLayout(false);
             this.tbpBusiness.PerformLayout();
@@ -854,7 +859,7 @@ namespace PHP_SRaPS
         private System.Windows.Forms.Label lblEmployeePassword;
         private System.Windows.Forms.Button btnEmployeePasswordEdit;
         private System.Windows.Forms.TextBox txbEmployeePassword;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblSearchBy;
         private System.Windows.Forms.RadioButton rbtnCategory;
         private System.Windows.Forms.RadioButton rbtnBarcode;
         private System.Windows.Forms.RadioButton rbtnName;
@@ -876,8 +881,8 @@ namespace PHP_SRaPS
         private System.Windows.Forms.Button btnCartRemove;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.RichTextBox rtxbTransaction;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txbTotalDiscountPercentage;
+        private System.Windows.Forms.TextBox txbTotalDiscountDollar;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.PrintDialog printDialogTransaction;
         private System.Drawing.Printing.PrintDocument printDocumentTransaction;

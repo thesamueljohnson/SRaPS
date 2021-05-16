@@ -10,6 +10,7 @@ public class Business
 	private List<Item> _items = new List<Item>();
 	private List<Report> _reports = new List<Report>();
 	private List<String> _categories = new List<string>();
+	private BusinessDay _currentBusinessDay = null;
 	private Report _thisMonthsReport;
 
 	private int _nextStaffID = -1;
@@ -23,6 +24,7 @@ public class Business
 	public List<Salesperson> Staff { get { return _staff; } }
 	public List<Item> Items { get { return _items; } }
 	public List<string> Categories { get { return _categories; } }
+	public BusinessDay CurrentBusinessDay { get { return _currentBusinessDay; } }
 
 	//ID properties (auto-increments when fetched)
 	public int NextStaffID { get { _nextStaffID++; return _nextStaffID; } }
@@ -80,5 +82,27 @@ public class Business
 	public void RemoveCategory(int index)
     {
 		_categories.RemoveAt(index);
+    }
+
+	public void StartBusinessDay()
+    {
+		_currentBusinessDay = new BusinessDay(DateTime.Now);
+    }
+
+	public void EndBusinessDay()
+    {
+		_currentBusinessDay.Close();
+		_currentBusinessDay = null;
+    }
+
+	public bool IsLastClockedIn(Salesperson last)
+    {
+		foreach(Salesperson salesperson in _currentBusinessDay.ClockedOn)
+        {
+			if (salesperson.IsClockedIn() && salesperson.StaffID != last.StaffID)
+				return false;
+        }
+
+		return true;
     }
 }

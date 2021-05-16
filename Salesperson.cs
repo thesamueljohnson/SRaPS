@@ -46,4 +46,17 @@ public class Salesperson
 		//More checks here
 		_password = newPassword;
     }
+
+	public bool IsClockedIn()
+	{
+		//Staff member must have clocked in today to register as clocked in
+		if (_dayStart != DateTime.MinValue && _dayStart.Day == DateTime.Today.Day)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 }
