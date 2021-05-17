@@ -34,6 +34,7 @@ namespace PHP_SRaPS
             this.lblVersion = new System.Windows.Forms.Label();
             this.tbcMain = new System.Windows.Forms.TabControl();
             this.tbpBusiness = new System.Windows.Forms.TabPage();
+            this.lblEmployeeDetails = new System.Windows.Forms.Label();
             this.lblEmployeePassword = new System.Windows.Forms.Label();
             this.btnEmployeePasswordEdit = new System.Windows.Forms.Button();
             this.txbEmployeePassword = new System.Windows.Forms.TextBox();
@@ -93,9 +94,20 @@ namespace PHP_SRaPS
             this.label4 = new System.Windows.Forms.Label();
             this.txbSearch = new System.Windows.Forms.TextBox();
             this.tbpReporting = new System.Windows.Forms.TabPage();
+            this.lblOnStaff = new System.Windows.Forms.Label();
+            this.lsbClockedIn = new System.Windows.Forms.ListBox();
+            this.lblBusinessDaySalesArrow = new System.Windows.Forms.Label();
+            this.rtxbSaleData = new System.Windows.Forms.RichTextBox();
+            this.lblSalesMade = new System.Windows.Forms.Label();
+            this.lsbBusinessDaySales = new System.Windows.Forms.ListBox();
+            this.lsbBusinessDays = new System.Windows.Forms.ListBox();
+            this.lblBusinessDays = new System.Windows.Forms.Label();
             this.printDialogTransaction = new System.Windows.Forms.PrintDialog();
             this.printDocumentTransaction = new System.Drawing.Printing.PrintDocument();
             this.printPreviewTransaction = new System.Windows.Forms.PrintPreviewDialog();
+            this.btnGenerateReport = new System.Windows.Forms.Button();
+            this.lblSelectionExplanation = new System.Windows.Forms.Label();
+            this.lblBusinessDayExplanation = new System.Windows.Forms.Label();
             this.tbcMain.SuspendLayout();
             this.tbpBusiness.SuspendLayout();
             this.tbpSales.SuspendLayout();
@@ -104,6 +116,7 @@ namespace PHP_SRaPS
             this.splcTransaction.Panel1.SuspendLayout();
             this.splcTransaction.Panel2.SuspendLayout();
             this.splcTransaction.SuspendLayout();
+            this.tbpReporting.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -124,7 +137,7 @@ namespace PHP_SRaPS
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(56, 14);
             this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "V_1.0.5";
+            this.lblVersion.Text = "V_1.0.6";
             // 
             // tbcMain
             // 
@@ -140,6 +153,7 @@ namespace PHP_SRaPS
             // tbpBusiness
             // 
             this.tbpBusiness.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbpBusiness.Controls.Add(this.lblEmployeeDetails);
             this.tbpBusiness.Controls.Add(this.lblEmployeePassword);
             this.tbpBusiness.Controls.Add(this.btnEmployeePasswordEdit);
             this.tbpBusiness.Controls.Add(this.txbEmployeePassword);
@@ -176,6 +190,16 @@ namespace PHP_SRaPS
             this.tbpBusiness.Text = "Business";
             this.tbpBusiness.UseVisualStyleBackColor = true;
             this.tbpBusiness.Click += new System.EventHandler(this.tbpBusiness_Click);
+            // 
+            // lblEmployeeDetails
+            // 
+            this.lblEmployeeDetails.AutoSize = true;
+            this.lblEmployeeDetails.Font = new System.Drawing.Font("Corbel", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblEmployeeDetails.Location = new System.Drawing.Point(193, 54);
+            this.lblEmployeeDetails.Name = "lblEmployeeDetails";
+            this.lblEmployeeDetails.Size = new System.Drawing.Size(155, 23);
+            this.lblEmployeeDetails.TabIndex = 29;
+            this.lblEmployeeDetails.Text = "Employee Details";
             // 
             // lblEmployeePassword
             // 
@@ -232,7 +256,7 @@ namespace PHP_SRaPS
             // lblBusinessPassword
             // 
             this.lblBusinessPassword.AutoSize = true;
-            this.lblBusinessPassword.Location = new System.Drawing.Point(302, 10);
+            this.lblBusinessPassword.Location = new System.Drawing.Point(299, 3);
             this.lblBusinessPassword.Name = "lblBusinessPassword";
             this.lblBusinessPassword.Size = new System.Drawing.Size(87, 13);
             this.lblBusinessPassword.TabIndex = 23;
@@ -240,7 +264,7 @@ namespace PHP_SRaPS
             // 
             // btnBusinessPasswordEdit
             // 
-            this.btnBusinessPasswordEdit.Location = new System.Drawing.Point(433, 25);
+            this.btnBusinessPasswordEdit.Location = new System.Drawing.Point(432, 18);
             this.btnBusinessPasswordEdit.Name = "btnBusinessPasswordEdit";
             this.btnBusinessPasswordEdit.Size = new System.Drawing.Size(64, 20);
             this.btnBusinessPasswordEdit.TabIndex = 22;
@@ -250,7 +274,7 @@ namespace PHP_SRaPS
             // 
             // txbBusinessPassword
             // 
-            this.txbBusinessPassword.Location = new System.Drawing.Point(302, 25);
+            this.txbBusinessPassword.Location = new System.Drawing.Point(299, 18);
             this.txbBusinessPassword.Name = "txbBusinessPassword";
             this.txbBusinessPassword.ReadOnly = true;
             this.txbBusinessPassword.Size = new System.Drawing.Size(127, 20);
@@ -372,7 +396,7 @@ namespace PHP_SRaPS
             // lblBusinessName
             // 
             this.lblBusinessName.AutoSize = true;
-            this.lblBusinessName.Location = new System.Drawing.Point(10, 10);
+            this.lblBusinessName.Location = new System.Drawing.Point(6, 3);
             this.lblBusinessName.Name = "lblBusinessName";
             this.lblBusinessName.Size = new System.Drawing.Size(81, 13);
             this.lblBusinessName.TabIndex = 7;
@@ -401,11 +425,12 @@ namespace PHP_SRaPS
             // lblEmployees
             // 
             this.lblEmployees.AutoSize = true;
-            this.lblEmployees.Location = new System.Drawing.Point(10, 64);
+            this.lblEmployees.Font = new System.Drawing.Font("Corbel", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEmployees.Location = new System.Drawing.Point(9, 54);
             this.lblEmployees.Name = "lblEmployees";
-            this.lblEmployees.Size = new System.Drawing.Size(61, 13);
+            this.lblEmployees.Size = new System.Drawing.Size(101, 23);
             this.lblEmployees.TabIndex = 4;
-            this.lblEmployees.Text = "Employees:";
+            this.lblEmployees.Text = "Employees";
             // 
             // lsbEmployees
             // 
@@ -418,7 +443,7 @@ namespace PHP_SRaPS
             // 
             // btnBusinessNameEdit
             // 
-            this.btnBusinessNameEdit.Location = new System.Drawing.Point(232, 25);
+            this.btnBusinessNameEdit.Location = new System.Drawing.Point(229, 18);
             this.btnBusinessNameEdit.Name = "btnBusinessNameEdit";
             this.btnBusinessNameEdit.Size = new System.Drawing.Size(64, 20);
             this.btnBusinessNameEdit.TabIndex = 2;
@@ -428,7 +453,7 @@ namespace PHP_SRaPS
             // 
             // txbBusinessName
             // 
-            this.txbBusinessName.Location = new System.Drawing.Point(10, 25);
+            this.txbBusinessName.Location = new System.Drawing.Point(6, 18);
             this.txbBusinessName.Name = "txbBusinessName";
             this.txbBusinessName.ReadOnly = true;
             this.txbBusinessName.Size = new System.Drawing.Size(217, 20);
@@ -461,19 +486,19 @@ namespace PHP_SRaPS
             // lblSalesperson
             // 
             this.lblSalesperson.AutoSize = true;
-            this.lblSalesperson.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSalesperson.Location = new System.Drawing.Point(251, 11);
+            this.lblSalesperson.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSalesperson.Location = new System.Drawing.Point(257, 10);
             this.lblSalesperson.Name = "lblSalesperson";
-            this.lblSalesperson.Size = new System.Drawing.Size(59, 12);
+            this.lblSalesperson.Size = new System.Drawing.Size(68, 13);
             this.lblSalesperson.TabIndex = 14;
             this.lblSalesperson.Text = "Salesperson:";
             // 
             // cmbSalesperson
             // 
             this.cmbSalesperson.FormattingEnabled = true;
-            this.cmbSalesperson.Location = new System.Drawing.Point(316, 8);
+            this.cmbSalesperson.Location = new System.Drawing.Point(331, 8);
             this.cmbSalesperson.Name = "cmbSalesperson";
-            this.cmbSalesperson.Size = new System.Drawing.Size(173, 21);
+            this.cmbSalesperson.Size = new System.Drawing.Size(158, 21);
             this.cmbSalesperson.TabIndex = 13;
             this.cmbSalesperson.TextUpdate += new System.EventHandler(this.cmbSalesperson_TextUpdate);
             // 
@@ -519,10 +544,10 @@ namespace PHP_SRaPS
             // lblSearchBy
             // 
             this.lblSearchBy.AutoSize = true;
-            this.lblSearchBy.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSearchBy.Location = new System.Drawing.Point(140, 11);
+            this.lblSearchBy.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSearchBy.Location = new System.Drawing.Point(132, 10);
             this.lblSearchBy.Name = "lblSearchBy";
-            this.lblSearchBy.Size = new System.Drawing.Size(49, 12);
+            this.lblSearchBy.Size = new System.Drawing.Size(58, 13);
             this.lblSearchBy.TabIndex = 5;
             this.lblSearchBy.Text = "Search by:";
             // 
@@ -765,6 +790,17 @@ namespace PHP_SRaPS
             // tbpReporting
             // 
             this.tbpReporting.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.tbpReporting.Controls.Add(this.lblBusinessDayExplanation);
+            this.tbpReporting.Controls.Add(this.lblSelectionExplanation);
+            this.tbpReporting.Controls.Add(this.btnGenerateReport);
+            this.tbpReporting.Controls.Add(this.lblOnStaff);
+            this.tbpReporting.Controls.Add(this.lsbClockedIn);
+            this.tbpReporting.Controls.Add(this.lblBusinessDaySalesArrow);
+            this.tbpReporting.Controls.Add(this.rtxbSaleData);
+            this.tbpReporting.Controls.Add(this.lblSalesMade);
+            this.tbpReporting.Controls.Add(this.lsbBusinessDaySales);
+            this.tbpReporting.Controls.Add(this.lsbBusinessDays);
+            this.tbpReporting.Controls.Add(this.lblBusinessDays);
             this.tbpReporting.Location = new System.Drawing.Point(4, 22);
             this.tbpReporting.Name = "tbpReporting";
             this.tbpReporting.Padding = new System.Windows.Forms.Padding(3);
@@ -772,6 +808,82 @@ namespace PHP_SRaPS
             this.tbpReporting.TabIndex = 2;
             this.tbpReporting.Text = "Reporting";
             this.tbpReporting.UseVisualStyleBackColor = true;
+            this.tbpReporting.Click += new System.EventHandler(this.tbpReporting_Click);
+            // 
+            // lblOnStaff
+            // 
+            this.lblOnStaff.AutoSize = true;
+            this.lblOnStaff.Location = new System.Drawing.Point(7, 184);
+            this.lblOnStaff.Name = "lblOnStaff";
+            this.lblOnStaff.Size = new System.Drawing.Size(49, 13);
+            this.lblOnStaff.TabIndex = 15;
+            this.lblOnStaff.Text = "On Staff:";
+            // 
+            // lsbClockedIn
+            // 
+            this.lsbClockedIn.FormattingEnabled = true;
+            this.lsbClockedIn.Location = new System.Drawing.Point(10, 200);
+            this.lsbClockedIn.Name = "lsbClockedIn";
+            this.lsbClockedIn.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.lsbClockedIn.Size = new System.Drawing.Size(120, 69);
+            this.lsbClockedIn.TabIndex = 14;
+            // 
+            // lblBusinessDaySalesArrow
+            // 
+            this.lblBusinessDaySalesArrow.AutoSize = true;
+            this.lblBusinessDaySalesArrow.Location = new System.Drawing.Point(132, 88);
+            this.lblBusinessDaySalesArrow.Name = "lblBusinessDaySalesArrow";
+            this.lblBusinessDaySalesArrow.Size = new System.Drawing.Size(13, 13);
+            this.lblBusinessDaySalesArrow.TabIndex = 12;
+            this.lblBusinessDaySalesArrow.Text = ">";
+            // 
+            // rtxbSaleData
+            // 
+            this.rtxbSaleData.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtxbSaleData.Location = new System.Drawing.Point(218, 31);
+            this.rtxbSaleData.Name = "rtxbSaleData";
+            this.rtxbSaleData.ReadOnly = true;
+            this.rtxbSaleData.Size = new System.Drawing.Size(278, 238);
+            this.rtxbSaleData.TabIndex = 11;
+            this.rtxbSaleData.Text = "";
+            // 
+            // lblSalesMade
+            // 
+            this.lblSalesMade.AutoSize = true;
+            this.lblSalesMade.Font = new System.Drawing.Font("Corbel", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblSalesMade.Location = new System.Drawing.Point(165, 5);
+            this.lblSalesMade.Name = "lblSalesMade";
+            this.lblSalesMade.Size = new System.Drawing.Size(105, 23);
+            this.lblSalesMade.TabIndex = 10;
+            this.lblSalesMade.Text = "Sales Made";
+            // 
+            // lsbBusinessDaySales
+            // 
+            this.lsbBusinessDaySales.FormattingEnabled = true;
+            this.lsbBusinessDaySales.Location = new System.Drawing.Point(146, 31);
+            this.lsbBusinessDaySales.Name = "lsbBusinessDaySales";
+            this.lsbBusinessDaySales.Size = new System.Drawing.Size(66, 238);
+            this.lsbBusinessDaySales.TabIndex = 9;
+            this.lsbBusinessDaySales.SelectedIndexChanged += new System.EventHandler(this.lsbBusinessDaySales_SelectedIndexChanged);
+            // 
+            // lsbBusinessDays
+            // 
+            this.lsbBusinessDays.FormattingEnabled = true;
+            this.lsbBusinessDays.Location = new System.Drawing.Point(10, 31);
+            this.lsbBusinessDays.Name = "lsbBusinessDays";
+            this.lsbBusinessDays.Size = new System.Drawing.Size(120, 147);
+            this.lsbBusinessDays.TabIndex = 8;
+            this.lsbBusinessDays.SelectedIndexChanged += new System.EventHandler(this.lsbBusinessDays_SelectedIndexChanged);
+            // 
+            // lblBusinessDays
+            // 
+            this.lblBusinessDays.AutoSize = true;
+            this.lblBusinessDays.Font = new System.Drawing.Font("Corbel", 14.25F, System.Drawing.FontStyle.Bold);
+            this.lblBusinessDays.Location = new System.Drawing.Point(6, 5);
+            this.lblBusinessDays.Name = "lblBusinessDays";
+            this.lblBusinessDays.Size = new System.Drawing.Size(127, 23);
+            this.lblBusinessDays.TabIndex = 7;
+            this.lblBusinessDays.Text = "Business Days";
             // 
             // printDialogTransaction
             // 
@@ -794,6 +906,33 @@ namespace PHP_SRaPS
             this.printPreviewTransaction.Name = "printPreviewTransaction";
             this.printPreviewTransaction.Visible = false;
             // 
+            // btnGenerateReport
+            // 
+            this.btnGenerateReport.Location = new System.Drawing.Point(10, 278);
+            this.btnGenerateReport.Name = "btnGenerateReport";
+            this.btnGenerateReport.Size = new System.Drawing.Size(120, 25);
+            this.btnGenerateReport.TabIndex = 16;
+            this.btnGenerateReport.Text = "Report from Selection";
+            this.btnGenerateReport.UseVisualStyleBackColor = true;
+            // 
+            // lblSelectionExplanation
+            // 
+            this.lblSelectionExplanation.AutoSize = true;
+            this.lblSelectionExplanation.Location = new System.Drawing.Point(166, 290);
+            this.lblSelectionExplanation.Name = "lblSelectionExplanation";
+            this.lblSelectionExplanation.Size = new System.Drawing.Size(330, 13);
+            this.lblSelectionExplanation.TabIndex = 17;
+            this.lblSelectionExplanation.Text = "Shift-click to select a range of business days, then generate a report.";
+            // 
+            // lblBusinessDayExplanation
+            // 
+            this.lblBusinessDayExplanation.AutoSize = true;
+            this.lblBusinessDayExplanation.Location = new System.Drawing.Point(182, 277);
+            this.lblBusinessDayExplanation.Name = "lblBusinessDayExplanation";
+            this.lblBusinessDayExplanation.Size = new System.Drawing.Size(314, 13);
+            this.lblBusinessDayExplanation.TabIndex = 18;
+            this.lblBusinessDayExplanation.Text = "Business Days are generated when the last employee clocks out.";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -804,7 +943,7 @@ namespace PHP_SRaPS
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblTitle);
             this.Name = "MainForm";
-            this.Text = "SRaPS V_1.0.5 (Prototype)";
+            this.Text = "SRaPS V_1.0.6 (Prototype)";
             this.tbcMain.ResumeLayout(false);
             this.tbpBusiness.ResumeLayout(false);
             this.tbpBusiness.PerformLayout();
@@ -818,6 +957,8 @@ namespace PHP_SRaPS
             this.splcTransaction.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splcTransaction)).EndInit();
             this.splcTransaction.ResumeLayout(false);
+            this.tbpReporting.ResumeLayout(false);
+            this.tbpReporting.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -891,6 +1032,18 @@ namespace PHP_SRaPS
         private System.Windows.Forms.ComboBox cmbSalesperson;
         private System.Windows.Forms.Label lblSalesperson;
         private System.Windows.Forms.Button btnProcessSale;
+        private System.Windows.Forms.ListBox lsbBusinessDaySales;
+        private System.Windows.Forms.ListBox lsbBusinessDays;
+        private System.Windows.Forms.Label lblBusinessDays;
+        private System.Windows.Forms.Label lblBusinessDaySalesArrow;
+        private System.Windows.Forms.RichTextBox rtxbSaleData;
+        private System.Windows.Forms.Label lblSalesMade;
+        private System.Windows.Forms.ListBox lsbClockedIn;
+        private System.Windows.Forms.Label lblOnStaff;
+        private System.Windows.Forms.Label lblEmployeeDetails;
+        private System.Windows.Forms.Label lblSelectionExplanation;
+        private System.Windows.Forms.Button btnGenerateReport;
+        private System.Windows.Forms.Label lblBusinessDayExplanation;
     }
 }
 

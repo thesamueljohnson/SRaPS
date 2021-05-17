@@ -10,6 +10,7 @@ public class Business
 	private List<Item> _items = new List<Item>();
 	private List<Report> _reports = new List<Report>();
 	private List<String> _categories = new List<string>();
+	private List<BusinessDay> _businessDays = new List<BusinessDay>();
 	private BusinessDay _currentBusinessDay = null;
 	private Report _thisMonthsReport;
 
@@ -24,6 +25,7 @@ public class Business
 	public List<Salesperson> Staff { get { return _staff; } }
 	public List<Item> Items { get { return _items; } }
 	public List<string> Categories { get { return _categories; } }
+	public List<BusinessDay> BusinessDays { get { return _businessDays; } }
 	public BusinessDay CurrentBusinessDay { get { return _currentBusinessDay; } }
 
 	//ID properties (auto-increments when fetched)
@@ -86,12 +88,24 @@ public class Business
 
 	public void StartBusinessDay()
     {
-		_currentBusinessDay = new BusinessDay(DateTime.Now);
+		_currentBusinessDay = null;
+
+		//Resume business day if they have a matching date
+		foreach(BusinessDay day in _businessDays)
+        {
+			if(day.Date == DateTime.Now.Date.ToShortDateString())
+				_currentBusinessDay = day;
+        }
+		//Start a new business day if there's no matching date
+		if(_currentBusinessDay == null)
+			_currentBusinessDay = new BusinessDay(DateTime.Now);
     }
 
 	public void EndBusinessDay()
     {
 		_currentBusinessDay.Close();
+		if(!_businessDays.Contains(_currentBusinessDay))
+			_businessDays.Add(_currentBusinessDay);
 		_currentBusinessDay = null;
     }
 

@@ -168,7 +168,7 @@ namespace PHP_SRaPS
             // 
             this.btnSave.Location = new System.Drawing.Point(93, 161);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(78, 20);
+            this.btnSave.Size = new System.Drawing.Size(78, 25);
             this.btnSave.TabIndex = 33;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -178,7 +178,7 @@ namespace PHP_SRaPS
             // 
             this.btnEditCategories.Location = new System.Drawing.Point(254, 161);
             this.btnEditCategories.Name = "btnEditCategories";
-            this.btnEditCategories.Size = new System.Drawing.Size(90, 20);
+            this.btnEditCategories.Size = new System.Drawing.Size(90, 25);
             this.btnEditCategories.TabIndex = 34;
             this.btnEditCategories.Text = "Edit Categories";
             this.btnEditCategories.UseVisualStyleBackColor = true;
@@ -188,7 +188,7 @@ namespace PHP_SRaPS
             // 
             this.btnCancel.Location = new System.Drawing.Point(10, 161);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(78, 20);
+            this.btnCancel.Size = new System.Drawing.Size(78, 25);
             this.btnCancel.TabIndex = 35;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;

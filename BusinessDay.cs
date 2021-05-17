@@ -8,8 +8,11 @@ public class BusinessDay
 	private List<Sale> _sales = new List<Sale>();
 	private DateTime _openTime;
 	private DateTime _closeTime;
-	
+
+	public List<Salesperson> Staff { get { return _staff; } }
 	public List<Salesperson> ClockedOn { get { return _clockedOn; } }
+	public String Date { get { return _openTime.Date.ToShortDateString(); } }
+	public List<Sale> Sales { get { return _sales; } }
 
 	public BusinessDay(DateTime openTime)
 	{

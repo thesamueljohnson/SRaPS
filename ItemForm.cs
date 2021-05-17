@@ -59,7 +59,7 @@ namespace PHP_SRaPS
             txbDiscountDollar.Text = _item.DiscountDollar.ToString("C", CultureInfo.CreateSpecificCulture("en-US"));
             txbDiscountPercentage.Text = _item.DiscountPercentage.ToString("P", CultureInfo.InvariantCulture);
             categoriesBindingSource.ResetBindings(false);
-            txbBarcode.Text = _item.Barcode.ToString();
+            txbBarcode.Text = new string(_item.Barcode);
             nudStockQuantity.Value = _item.StockQuantity;
         }
 

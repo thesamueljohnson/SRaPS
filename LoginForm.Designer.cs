@@ -39,17 +39,17 @@ namespace PHP_SRaPS
             // lblRequires
             // 
             this.lblRequires.AutoSize = true;
-            this.lblRequires.Location = new System.Drawing.Point(13, 13);
+            this.lblRequires.Location = new System.Drawing.Point(11, 7);
             this.lblRequires.Name = "lblRequires";
-            this.lblRequires.Size = new System.Drawing.Size(52, 15);
+            this.lblRequires.Size = new System.Drawing.Size(49, 13);
             this.lblRequires.TabIndex = 0;
             this.lblRequires.Text = "Requires";
             // 
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
-            this.lblUsername.Font = new System.Drawing.Font("Corbel", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.lblUsername.Location = new System.Drawing.Point(39, 28);
+            this.lblUsername.Font = new System.Drawing.Font("Corbel", 15.75F);
+            this.lblUsername.Location = new System.Drawing.Point(33, 21);
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(131, 26);
             this.lblUsername.TabIndex = 1;
@@ -57,17 +57,17 @@ namespace PHP_SRaPS
             // 
             // txbPassword
             // 
-            this.txbPassword.Location = new System.Drawing.Point(13, 62);
+            this.txbPassword.Location = new System.Drawing.Point(11, 54);
             this.txbPassword.Name = "txbPassword";
-            this.txbPassword.Size = new System.Drawing.Size(291, 23);
+            this.txbPassword.Size = new System.Drawing.Size(250, 20);
             this.txbPassword.TabIndex = 2;
             this.txbPassword.UseSystemPasswordChar = true;
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(81, 104);
+            this.btnLogin.Location = new System.Drawing.Point(69, 86);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(162, 23);
+            this.btnLogin.Size = new System.Drawing.Size(139, 25);
             this.btnLogin.TabIndex = 3;
             this.btnLogin.Text = "Authorise Changes";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -77,18 +77,18 @@ namespace PHP_SRaPS
             // 
             this.lblIncorrect.AutoSize = true;
             this.lblIncorrect.ForeColor = System.Drawing.Color.Red;
-            this.lblIncorrect.Location = new System.Drawing.Point(197, 44);
+            this.lblIncorrect.Location = new System.Drawing.Point(169, 38);
             this.lblIncorrect.Name = "lblIncorrect";
-            this.lblIncorrect.Size = new System.Drawing.Size(107, 15);
+            this.lblIncorrect.Size = new System.Drawing.Size(97, 13);
             this.lblIncorrect.TabIndex = 4;
             this.lblIncorrect.Text = "Incorrect password";
             this.lblIncorrect.Visible = false;
             // 
             // LoginForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(316, 139);
+            this.ClientSize = new System.Drawing.Size(271, 120);
             this.Controls.Add(this.lblIncorrect);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txbPassword);
