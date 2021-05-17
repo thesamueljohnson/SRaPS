@@ -846,6 +846,7 @@ namespace PHP_SRaPS
             this.rtxbSaleData.Size = new System.Drawing.Size(278, 238);
             this.rtxbSaleData.TabIndex = 11;
             this.rtxbSaleData.Text = "";
+            this.rtxbSaleData.WordWrap = false;
             // 
             // lblSalesMade
             // 
