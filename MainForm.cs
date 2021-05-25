@@ -16,6 +16,7 @@ namespace PHP_SRaPS
         public Business business = new Business("Default Business", "admin");
         BindingSource staffBindingSource = new BindingSource();
         BindingSource staffDayBindingSource = new BindingSource();
+        BindingSource staffSalesBindingSource = new BindingSource();
         BindingSource businessDaysBindingSource = new BindingSource();
         BindingSource businessDaySalesBindingSource = new BindingSource();
         BindingSource businessDayStaffBindingSource = new BindingSource();
@@ -177,9 +178,10 @@ namespace PHP_SRaPS
         {
             //Refill pages with business data
             staffBindingSource.ResetBindings(false);
+            staffSalesBindingSource.ResetBindings(false);
             txbBusinessName.Text = business.Name;
             txbBusinessPassword.Text = business.Password;
-            if (lsbEmployees.SelectedIndex >= 0 && lsbEmployees.SelectedIndex < lsbEmployees.Items.Count)
+            if (lsbEmployees.Items.Count > 0 && lsbEmployees.SelectedIndex >= 0)
             {
                 FillEmployeeDetails(business.Staff[lsbEmployees.SelectedIndex]);
             } else
@@ -196,6 +198,9 @@ namespace PHP_SRaPS
             txbLastName.Text = target.LastName;
             txbHoursThisWeek.Text = target.HoursThisWeek.TotalHours.ToString("N2");
             txbHoursTotal.Text = target.HoursTotal.TotalHours.ToString("N2");
+            staffSalesBindingSource.DataSource = target.Sales;
+            lsbEmployeeSales.DisplayMember = "TotalString";
+            lsbEmployeeSales.DataSource = staffSalesBindingSource;
 
             //Reset the clock state if the employee is clocked in/out
             if (target.DayStart == DateTime.MinValue)
@@ -224,6 +229,7 @@ namespace PHP_SRaPS
             btnEmployeeEdit.Enabled = false;
             btnEmployeePasswordEdit.Enabled = false;
             btnViewEmployeeSale.Enabled = false;
+            lsbEmployeeSales.Items.Clear();
         }
 
         public void Authorise(string username, string password, object sender)
@@ -629,6 +635,7 @@ namespace PHP_SRaPS
                     sale.Total = totalPrice;
                     sale.TransactionString = rtxbTransaction.Text;
                     business.CurrentBusinessDay.AddSale(sale);
+                    salesperson.AddSale(sale);
 
                     lsbCart.Items.Clear();
                     txbTotalDiscountPercentage.Text = 0.ToString("P", CultureInfo.InvariantCulture);

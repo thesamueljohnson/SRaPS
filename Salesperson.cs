@@ -23,6 +23,7 @@ public class Salesperson
 	public TimeSpan HoursThisWeek { get { return _hoursThisWeek; } }
 	public TimeSpan HoursTotal { get { return _hoursTotal; } }
 	public string FullName { get { return _fullName; } set { _fullName = value; } }
+	public List<Sale> Sales { get { return _sales; } }
 
 	public Salesperson(int id, string firstName, string lastName)
 	{
@@ -59,4 +60,9 @@ public class Salesperson
 			return false;
 		}
 	}
+
+	public void AddSale(Sale sale)
+    {
+		_sales.Add(sale);
+    }
 }

@@ -94,6 +94,9 @@ namespace PHP_SRaPS
             this.label4 = new System.Windows.Forms.Label();
             this.txbSearch = new System.Windows.Forms.TextBox();
             this.tbpReporting = new System.Windows.Forms.TabPage();
+            this.lblBusinessDayExplanation = new System.Windows.Forms.Label();
+            this.lblSelectionExplanation = new System.Windows.Forms.Label();
+            this.btnGenerateReport = new System.Windows.Forms.Button();
             this.lblOnStaff = new System.Windows.Forms.Label();
             this.lsbClockedIn = new System.Windows.Forms.ListBox();
             this.lblBusinessDaySalesArrow = new System.Windows.Forms.Label();
@@ -105,9 +108,6 @@ namespace PHP_SRaPS
             this.printDialogTransaction = new System.Windows.Forms.PrintDialog();
             this.printDocumentTransaction = new System.Drawing.Printing.PrintDocument();
             this.printPreviewTransaction = new System.Windows.Forms.PrintPreviewDialog();
-            this.btnGenerateReport = new System.Windows.Forms.Button();
-            this.lblSelectionExplanation = new System.Windows.Forms.Label();
-            this.lblBusinessDayExplanation = new System.Windows.Forms.Label();
             this.tbcMain.SuspendLayout();
             this.tbpBusiness.SuspendLayout();
             this.tbpSales.SuspendLayout();
@@ -137,7 +137,7 @@ namespace PHP_SRaPS
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(56, 14);
             this.lblVersion.TabIndex = 2;
-            this.lblVersion.Text = "V_1.0.6";
+            this.lblVersion.Text = "V_1.0.7";
             // 
             // tbcMain
             // 
@@ -810,6 +810,33 @@ namespace PHP_SRaPS
             this.tbpReporting.UseVisualStyleBackColor = true;
             this.tbpReporting.Click += new System.EventHandler(this.tbpReporting_Click);
             // 
+            // lblBusinessDayExplanation
+            // 
+            this.lblBusinessDayExplanation.AutoSize = true;
+            this.lblBusinessDayExplanation.Location = new System.Drawing.Point(182, 277);
+            this.lblBusinessDayExplanation.Name = "lblBusinessDayExplanation";
+            this.lblBusinessDayExplanation.Size = new System.Drawing.Size(314, 13);
+            this.lblBusinessDayExplanation.TabIndex = 18;
+            this.lblBusinessDayExplanation.Text = "Business Days are generated when the last employee clocks out.";
+            // 
+            // lblSelectionExplanation
+            // 
+            this.lblSelectionExplanation.AutoSize = true;
+            this.lblSelectionExplanation.Location = new System.Drawing.Point(166, 290);
+            this.lblSelectionExplanation.Name = "lblSelectionExplanation";
+            this.lblSelectionExplanation.Size = new System.Drawing.Size(330, 13);
+            this.lblSelectionExplanation.TabIndex = 17;
+            this.lblSelectionExplanation.Text = "Shift-click to select a range of business days, then generate a report.";
+            // 
+            // btnGenerateReport
+            // 
+            this.btnGenerateReport.Location = new System.Drawing.Point(10, 278);
+            this.btnGenerateReport.Name = "btnGenerateReport";
+            this.btnGenerateReport.Size = new System.Drawing.Size(120, 25);
+            this.btnGenerateReport.TabIndex = 16;
+            this.btnGenerateReport.Text = "Report from Selection";
+            this.btnGenerateReport.UseVisualStyleBackColor = true;
+            // 
             // lblOnStaff
             // 
             this.lblOnStaff.AutoSize = true;
@@ -907,33 +934,6 @@ namespace PHP_SRaPS
             this.printPreviewTransaction.Name = "printPreviewTransaction";
             this.printPreviewTransaction.Visible = false;
             // 
-            // btnGenerateReport
-            // 
-            this.btnGenerateReport.Location = new System.Drawing.Point(10, 278);
-            this.btnGenerateReport.Name = "btnGenerateReport";
-            this.btnGenerateReport.Size = new System.Drawing.Size(120, 25);
-            this.btnGenerateReport.TabIndex = 16;
-            this.btnGenerateReport.Text = "Report from Selection";
-            this.btnGenerateReport.UseVisualStyleBackColor = true;
-            // 
-            // lblSelectionExplanation
-            // 
-            this.lblSelectionExplanation.AutoSize = true;
-            this.lblSelectionExplanation.Location = new System.Drawing.Point(166, 290);
-            this.lblSelectionExplanation.Name = "lblSelectionExplanation";
-            this.lblSelectionExplanation.Size = new System.Drawing.Size(330, 13);
-            this.lblSelectionExplanation.TabIndex = 17;
-            this.lblSelectionExplanation.Text = "Shift-click to select a range of business days, then generate a report.";
-            // 
-            // lblBusinessDayExplanation
-            // 
-            this.lblBusinessDayExplanation.AutoSize = true;
-            this.lblBusinessDayExplanation.Location = new System.Drawing.Point(182, 277);
-            this.lblBusinessDayExplanation.Name = "lblBusinessDayExplanation";
-            this.lblBusinessDayExplanation.Size = new System.Drawing.Size(314, 13);
-            this.lblBusinessDayExplanation.TabIndex = 18;
-            this.lblBusinessDayExplanation.Text = "Business Days are generated when the last employee clocks out.";
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -944,7 +944,7 @@ namespace PHP_SRaPS
             this.Controls.Add(this.lblVersion);
             this.Controls.Add(this.lblTitle);
             this.Name = "MainForm";
-            this.Text = "SRaPS V_1.0.6 (Prototype)";
+            this.Text = "SRaPS V_1.0.7 (Prototype)";
             this.tbcMain.ResumeLayout(false);
             this.tbpBusiness.ResumeLayout(false);
             this.tbpBusiness.PerformLayout();
